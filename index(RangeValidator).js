@@ -1,8 +1,5 @@
 class RangeValidator {
   constructor(from = 0, to = 10) {
-    if (from > to) {
-      throw new RangeError("from must be less than to");
-    }
     this.from = from;
     this.to = to;
   }
@@ -14,15 +11,15 @@ class RangeValidator {
     if (typeof number !== "number") {
       throw new TypeError("enter the number");
     }
-    if (this._from < number && number < this._to) {
-      return true;
-    }
-    return false;
+    return this._from < number && number < this._to;
   }
   get from() {
     return this._from;
   }
   set from(from) {
+    if (from > this.to) {
+      throw new RangeError("from must be less than to");
+    }
     if (typeof from !== "number") {
       throw new TypeError("enter the number");
     }
@@ -32,6 +29,9 @@ class RangeValidator {
     return this._to;
   }
   set to(to) {
+    if (this.from > to) {
+      throw new RangeError("from must be less than to");
+    }
     if (typeof to !== "number") {
       throw new TypeError("enter the number");
     }
@@ -43,7 +43,9 @@ const range = new RangeValidator(7, 15);
 
 try {
   console.log(range.getRange());
-  console.log(range.validate(9));
+  console.log(range.validate(8));
+  range.to = 18;
+  console.log(range.getRange());
 } catch (error) {
   console.log(error.message);
 }
